@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$USER_HOME$/Documentos/desenv/workspace/estudo/alura/kotlin/financasKotlin" />
-            <option value="$USER_HOME$/Documentos/desenv/workspace/estudo/alura/kotlin/financasKotlin/app" />
+            <option value="$USER_HOME$/Documentos/desenv/workspace/estudo/alura/kotlin/kotlinFinancas" />
+            <option value="$USER_HOME$/Documentos/desenv/workspace/estudo/alura/kotlin/kotlinFinancas/app" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

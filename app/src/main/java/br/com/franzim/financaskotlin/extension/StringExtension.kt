@@ -1,5 +1,8 @@
 package br.com.franzim.financaskotlin.extension
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 fun String.limitaCaracteresApos(tamanhoMaximo: Int) : String {
 
@@ -9,4 +12,12 @@ fun String.limitaCaracteresApos(tamanhoMaximo: Int) : String {
     }
 
     return this
+}
+
+fun convertParaCalendar(dt: String): Calendar {
+    val formataBrasileiro = SimpleDateFormat("dd/MM/yyyy")
+    val dtParse = formataBrasileiro.parse(dt)
+    val dtCalendar = Calendar.getInstance()
+    dtCalendar.time = dtParse
+    return dtCalendar
 }

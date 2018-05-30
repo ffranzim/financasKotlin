@@ -63,7 +63,7 @@
             fab:fab_colorPressed="#E8004A"
             fab:fab_colorRipple="#C20024"
             fab:fab_label="@string/adiciona_despesa"
-            fab:fab_size="normal" />
+            fab:fab_size="mini" />
 
     </com.github.clans.fab.FloatingActionMenu>
 

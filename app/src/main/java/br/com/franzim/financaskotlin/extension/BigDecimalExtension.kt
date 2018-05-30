@@ -6,5 +6,7 @@ import java.util.*
 
 fun BigDecimal.formatMoedaBR() : String {
     val formatRS = DecimalFormat.getCurrencyInstance(Locale("pt", "BR"))
-    return formatRS.format(this).replace("R$", "R$ ")
+    return formatRS.format(this)
+            .replace("R$", "R$ ")
+            .replace("-R$", "R$ -")
 }
