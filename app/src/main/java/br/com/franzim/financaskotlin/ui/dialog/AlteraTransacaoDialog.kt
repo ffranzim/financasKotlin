@@ -17,28 +17,44 @@ import kotlinx.android.synthetic.main.form_transacao.view.*
 import java.math.BigDecimal
 import java.util.*
 
-class AdicionaTransacaoDialog(private val context: Context, private val decorView: ViewGroup?) {
+class AlteraTransacaoDialog(private val context: Context, private val decorView: ViewGroup) {
 
-    fun show(tipoDialog: Tipo, transacaoDelegate: TransacaoDelegate) {
+    private val viewCriada = criaLayout()
 
-        val viewDialog = criaLayout()
-        viewDialog.form_transacao_categoria.adapter = confCampoCategoria(tipoDialog)
-        configuraCampoData(viewDialog)
+    private val campoCategoria = this.viewCriada.form_transacao_categoria
+    private val campoValor = viewCriada.form_transacao_valor
+    private val campoData = this.viewCriada.form_transacao_data
 
-        val tituloDialog = if (tipoDialog == Tipo.RECEITA) R.string.receita else R.string.despesa
-        confFormulario(viewDialog, tituloDialog, tipoDialog, transacaoDelegate)
+    fun show(transacao: Transacao, transacaoDelegate: TransacaoDelegate) {
+
+        configuraCampoData()
+
+        val tipoTransacao = transacao.tipo
+
+        this.campoValor.setText(transacao.valor.toString())
+        this.campoData.setText(transacao.data.formatDateBR())
+
+
+        val categorias = context.resources.getStringArray(categoriasPor(tipoTransacao))
+        this.campoCategoria.adapter = this.confCampoCategoria(tipoTransacao)
+        val posicaoCategoria = categorias.indexOf(transacao.categoria)
+        this.campoCategoria.setSelection(posicaoCategoria, true)
+
+        val tituloDialog = if (tipoTransacao == Tipo.RECEITA) R.string.altera_receita else R.string.altera_despesa
+        confFormulario(tituloDialog, tipoTransacao, transacaoDelegate)
     }
 
-    private fun confFormulario(viewDialog: View, tituloDialog: Int, tipoDialog: Tipo, transacaoDelegate: TransacaoDelegate) {
+
+    private fun confFormulario(tituloDialog: Int, tipoDialog: Tipo, transacaoDelegate: TransacaoDelegate) {
         AlertDialog.Builder(context)
                 .setTitle(tituloDialog)
-                .setView(viewDialog)
-                .setPositiveButton(tituloDialog,
+                .setView(this.viewCriada)
+                .setPositiveButton("Alterar",
                         { _, _ ->
 
-                            val valor = viewDialog.form_transacao_valor.text.toString()
-                            val categoria = viewDialog.form_transacao_categoria.selectedItem.toString()
-                            val dt = viewDialog.form_transacao_data.text.toString()
+                            val valor = this.campoValor.text.toString()
+                            val categoria = this.campoCategoria.selectedItem.toString()
+                            val dt = this.campoData.text.toString()
                             val dtCalendar = convertParaCalendar(dt)
 
                             val transacaoReceita = Transacao(BigDecimal(valor), categoria, tipoDialog, dtCalendar)
@@ -50,19 +66,17 @@ class AdicionaTransacaoDialog(private val context: Context, private val decorVie
     }
 
 
-
-
-    private fun configuraCampoData(viewDialog: View) {
+    private fun configuraCampoData() {
 
         val hoje = Calendar.getInstance()
 
-        viewDialog.form_transacao_data.setText(Calendar.getInstance().formatDateBR())
-        viewDialog.form_transacao_data.setOnClickListener {
+        this.campoData.setText(Calendar.getInstance().formatDateBR())
+        this.campoData.setOnClickListener {
             DatePickerDialog(context,
                     { _, ano, mes, dia ->
                         val dtSelecionada = Calendar.getInstance()
                         dtSelecionada.set(ano, mes, dia)
-                        viewDialog.form_transacao_data.setText(dtSelecionada.formatDateBR())
+                        this.campoData.setText(dtSelecionada.formatDateBR())
 
                     },
                     hoje.get(Calendar.YEAR),
@@ -73,14 +87,19 @@ class AdicionaTransacaoDialog(private val context: Context, private val decorVie
     }
 
     private fun confCampoCategoria(tipoDialog: Tipo): ArrayAdapter<CharSequence>? {
-        if (tipoDialog == Tipo.RECEITA) {
-            return ArrayAdapter.createFromResource(context, R.array.categorias_de_receita, android.R.layout.simple_spinner_dropdown_item)
-        }
-
-        return ArrayAdapter.createFromResource(context, R.array.categorias_de_despesa, android.R.layout.simple_spinner_dropdown_item)
+        return ArrayAdapter.createFromResource(context, categoriasPor(tipoDialog), android.R.layout.simple_spinner_dropdown_item)
     }
 
     private fun criaLayout(): View {
         return LayoutInflater.from(context).inflate(R.layout.form_transacao, decorView as ViewGroup, false)
     }
+
+    private fun categoriasPor(tipo: Tipo): Int {
+        if (tipo == Tipo.RECEITA) {
+            return R.array.categorias_de_receita
+        }
+        return R.array.categorias_de_despesa
+    }
+
+
 }

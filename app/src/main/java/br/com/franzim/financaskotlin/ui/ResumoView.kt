@@ -31,14 +31,17 @@ class ResumoView(private val context: Context, private val view: View) {
                     .sumByDouble { it.valor.toDouble() })
 
     private fun preencheView(totalReceita: BigDecimal, totalDespesa: BigDecimal, total: BigDecimal) {
-        with(view.resumo_card_receita) {
-            text = totalReceita.formatMoedaBR()
-            setTextColor(corReceita)
-        }
 
-        with(view.resumo_card_despesa) {
-            text = totalDespesa.formatMoedaBR()
-            setTextColor(corDespesa)
+        view?.let {
+            with(view.resumo_card_receita) {
+                text = totalReceita.formatMoedaBR()
+                setTextColor(corReceita)
+            }
+
+            with(it.resumo_card_despesa) {
+                text = totalDespesa.formatMoedaBR()
+                setTextColor(corDespesa)
+            }
         }
 
         corTotal.text = total.formatMoedaBR()

@@ -19,26 +19,32 @@ import java.util.*
 
 class AdicionaTransacaoDialog(private val context: Context, private val decorView: ViewGroup?) {
 
+    private val viewCriada = criaLayout()
+
+    private val campoCategoria = this.viewCriada.form_transacao_categoria
+    private val campoValor = viewCriada.form_transacao_valor
+    private val campoData = this.viewCriada.form_transacao_data
+
+
     fun show(tipoDialog: Tipo, transacaoDelegate: TransacaoDelegate) {
 
-        val viewDialog = criaLayout()
-        viewDialog.form_transacao_categoria.adapter = confCampoCategoria(tipoDialog)
-        configuraCampoData(viewDialog)
+        this.campoCategoria.adapter = confCampoCategoria(tipoDialog)
+        configuraCampoData()
 
         val tituloDialog = if (tipoDialog == Tipo.RECEITA) R.string.receita else R.string.despesa
-        confFormulario(viewDialog, tituloDialog, tipoDialog, transacaoDelegate)
+        confFormulario(tituloDialog, tipoDialog, transacaoDelegate)
     }
 
-    private fun confFormulario(viewDialog: View, tituloDialog: Int, tipoDialog: Tipo, transacaoDelegate: TransacaoDelegate) {
+    private fun confFormulario(tituloDialog: Int, tipoDialog: Tipo, transacaoDelegate: TransacaoDelegate) {
         AlertDialog.Builder(context)
                 .setTitle(tituloDialog)
-                .setView(viewDialog)
+                .setView(this.viewCriada)
                 .setPositiveButton(tituloDialog,
                         { _, _ ->
 
-                            val valor = viewDialog.form_transacao_valor.text.toString()
-                            val categoria = viewDialog.form_transacao_categoria.selectedItem.toString()
-                            val dt = viewDialog.form_transacao_data.text.toString()
+                            val valor = this.campoValor.text.toString()
+                            val categoria = this.campoCategoria.selectedItem.toString()
+                            val dt = this.campoData.text.toString()
                             val dtCalendar = convertParaCalendar(dt)
 
                             val transacaoReceita = Transacao(BigDecimal(valor), categoria, tipoDialog, dtCalendar)
@@ -52,17 +58,17 @@ class AdicionaTransacaoDialog(private val context: Context, private val decorVie
 
 
 
-    private fun configuraCampoData(viewDialog: View) {
+    private fun configuraCampoData() {
 
         val hoje = Calendar.getInstance()
 
-        viewDialog.form_transacao_data.setText(Calendar.getInstance().formatDateBR())
-        viewDialog.form_transacao_data.setOnClickListener {
+        this.campoData.setText(Calendar.getInstance().formatDateBR())
+        this.campoData.setOnClickListener {
             DatePickerDialog(context,
                     { _, ano, mes, dia ->
                         val dtSelecionada = Calendar.getInstance()
                         dtSelecionada.set(ano, mes, dia)
-                        viewDialog.form_transacao_data.setText(dtSelecionada.formatDateBR())
+                        this.campoData.setText(dtSelecionada.formatDateBR())
 
                     },
                     hoje.get(Calendar.YEAR),
