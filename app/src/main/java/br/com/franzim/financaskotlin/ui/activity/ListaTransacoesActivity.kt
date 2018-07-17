@@ -2,6 +2,7 @@ package br.com.franzim.financaskotlin.ui.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.view.ViewGroup
 import br.com.franzim.financaskotlin.R
 import br.com.franzim.financaskotlin.delegate.TransacaoDelegate
@@ -17,10 +18,15 @@ class ListaTransacoesActivity : AppCompatActivity() {
 
     private var transacoes: MutableList<Transacao> = mutableListOf();
 
-    private val viewGroup: ViewGroup
-        get() {
-            return window.decorView as ViewGroup
+    //    private lateinit var viewGroup: ViewGroup
+        private val viewGroup by lazy {
+            window.decorView
         }
+
+//    private val viewGroup: View
+//        get() {
+//            return window.decorView
+//        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,24 +39,24 @@ class ListaTransacoesActivity : AppCompatActivity() {
 
     private fun confFab() {
         lista_transacoes_adiciona_receita.setOnClickListener {
-            chamaDialog(viewGroup, Tipo.RECEITA)
+            chamaDialog(Tipo.RECEITA)
         }
 
         lista_transacoes_adiciona_despesa.setOnClickListener {
-            chamaDialog(viewGroup, Tipo.DESPESA)
+            chamaDialog(Tipo.DESPESA)
         }
     }
 
-    private fun chamaDialog(decorView: ViewGroup, tipo: Tipo) {
-        AdicionaTransacaoDialog(this, decorView as ViewGroup).show(tipo, object : TransacaoDelegate {
+    private fun chamaDialog(tipo: Tipo) {
+        AdicionaTransacaoDialog(this, viewGroup).show(tipo, object : TransacaoDelegate {
             override fun delegate(transacao: Transacao) {
-                addTransacao(transacao, decorView)
+                addTransacao(transacao)
             }
 
         })
     }
 
-    private fun addTransacao(transacao: Transacao, decorView: ViewGroup) {
+    private fun addTransacao(transacao: Transacao) {
         transacoes.add(transacao)
         lista_transacoes_adiciona_menu.close(true)
         atualizaTotais()

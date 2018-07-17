@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.form_transacao.view.*
 import java.math.BigDecimal
 import java.util.*
 
-class AlteraTransacaoDialog(private val context: Context, private val decorView: ViewGroup) {
+class AlteraTransacaoDialog(private val context: Context, private val decorView: View) {
 
     private val viewCriada = criaLayout()
 
