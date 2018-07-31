@@ -2,10 +2,7 @@ package br.com.franzim.financaskotlin.ui.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
-import android.view.ViewGroup
 import br.com.franzim.financaskotlin.R
-import br.com.franzim.financaskotlin.delegate.TransacaoDelegate
 import br.com.franzim.financaskotlin.model.Transacao
 import br.com.franzim.financaskotlin.model.enums.Tipo
 import br.com.franzim.financaskotlin.ui.ResumoView
@@ -35,6 +32,7 @@ class ListaTransacoesActivity : AppCompatActivity() {
         atualizaTotais()
 
         confFab()
+
     }
 
     private fun confFab() {
@@ -48,13 +46,20 @@ class ListaTransacoesActivity : AppCompatActivity() {
     }
 
     private fun chamaDialog(tipo: Tipo) {
-        AdicionaTransacaoDialog(this, viewGroup).show(tipo, object : TransacaoDelegate {
-            override fun delegate(transacao: Transacao) {
-                addTransacao(transacao)
-            }
+//        AdicionaTransacaoDialog(this, viewGroup).show(tipo,  { transacao ->
+//                addTransacao(transacao)
+//
+//        })
+//        AdicionaTransacaoDialog(this, viewGroup).show(tipo,  {
+//                addTransacao(it)
+//
+//        })
+        AdicionaTransacaoDialog(this, viewGroup).show(tipo) {
+            addTransacao(it)
+        }
 
-        })
     }
+
 
     private fun addTransacao(transacao: Transacao) {
         transacoes.add(transacao)
@@ -82,11 +87,10 @@ class ListaTransacoesActivity : AppCompatActivity() {
 
     private fun showDialogAlteracao(transacao: Transacao, posicao: Int) {
         AlteraTransacaoDialog(this, viewGroup)
-                .show(transacao, object : TransacaoDelegate {
-                    override fun delegate(transacao: Transacao) {
-                        alteraTransacao(posicao, transacao)
-                    }
-                })
+                .show(transacao) {
+                    alteraTransacao(posicao, it)
+
+                }
     }
 
     private fun alteraTransacao(posicao: Int, transacao: Transacao) {

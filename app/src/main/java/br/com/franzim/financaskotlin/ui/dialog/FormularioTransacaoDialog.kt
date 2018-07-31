@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import br.com.franzim.financaskotlin.R
-import br.com.franzim.financaskotlin.delegate.TransacaoDelegate
 import br.com.franzim.financaskotlin.extension.convertParaCalendar
 import br.com.franzim.financaskotlin.extension.formatDateBR
 import br.com.franzim.financaskotlin.model.Transacao
@@ -28,18 +27,17 @@ abstract class FormularioTransacaoDialog(
 
     abstract protected val TAG: String;
 
-    fun show(tipoDialog: Tipo, transacaoDelegate: TransacaoDelegate) {
+    fun show(tipoDialog: Tipo, delegate: (transacao: Transacao) -> Unit) {
 
         this.campoCategoria.adapter = confCampoCategoria(tipoDialog)
         configuraCampoData()
 
-//        val tituloDialog = if (tipoDialog == Tipo.RECEITA) R.string.receita else R.string.despesa
-        confFormulario(tituloPor(tipoDialog), tipoDialog, transacaoDelegate)
+        confFormulario(tituloPor(tipoDialog), tipoDialog, delegate)
     }
 
     abstract protected fun tituloPor(tipo: Tipo) : Int
 
-    private fun confFormulario(tituloDialog: Int, tipoDialog: Tipo, transacaoDelegate: TransacaoDelegate) {
+    private fun confFormulario(tituloDialog: Int, tipoDialog: Tipo, delegate: (transacao: Transacao) -> Unit) {
         AlertDialog.Builder(context)
                 .setTitle(tituloDialog)
                 .setView(this.viewCriada)
@@ -53,7 +51,7 @@ abstract class FormularioTransacaoDialog(
 
                             val transacaoReceita = Transacao(BigDecimal(valor), categoria, tipoDialog, dtCalendar)
 
-                            transacaoDelegate.delegate(transacaoReceita)
+                            delegate(transacaoReceita)
                         }
                 .setNegativeButton("Cancelar", null)
                 .show()

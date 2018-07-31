@@ -2,7 +2,7 @@ package br.com.franzim.financaskotlin.model
 
 import br.com.franzim.financaskotlin.model.enums.Tipo
 import java.math.BigDecimal
-import java.util.Calendar
+import java.util.*
 
 class Transacao(val valor: BigDecimal,
                 val categoria: String,
