@@ -2,6 +2,12 @@ package br.com.franzim.financaskotlin.ui.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.ContextMenu
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Adapter
+import android.widget.AdapterView
+import android.widget.Toast
 import br.com.franzim.financaskotlin.R
 import br.com.franzim.financaskotlin.model.Transacao
 import br.com.franzim.financaskotlin.model.enums.Tipo
@@ -75,14 +81,33 @@ class ListaTransacoesActivity : AppCompatActivity() {
                 showDialogAlteracao(transacao, posicao)
 
             }
-
+            setOnCreateContextMenuListener { contextMenu, view, contextMenuInfo ->
+                contextMenu.add(Menu.NONE, 1, Menu.NONE, "Remover")
+            }
         }
-        lista_transacoes_listview.adapter = ListaTransacoesAdapter(transacoes, this)
-        lista_transacoes_listview.setOnItemClickListener { _, _, posicao, id ->
-            val transacao = transacoes[posicao]
-            showDialogAlteracao(transacao, posicao)
 
+//        lista_transacoes_listview.adapter = ListaTransacoesAdapter(transacoes, this)
+//        lista_transacoes_listview.setOnItemClickListener { _, _, posicao, id ->
+//            val transacao = transacoes[posicao]
+//            showDialogAlteracao(transacao, posicao)
+//
+//        }
+    }
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        val itemId = item?.itemId
+        if (itemId == 1) {
+            val adapterContextMenuInfo = item.menuInfo as AdapterView.AdapterContextMenuInfo
+            val position = adapterContextMenuInfo.position
+            remove(position)
         }
+
+        return super.onContextItemSelected(item)
+    }
+
+    fun remove(position: Int) {
+        transacoes.removeAt(position)
+        atualizaTotais()
     }
 
     private fun showDialogAlteracao(transacao: Transacao, posicao: Int) {
