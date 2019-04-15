@@ -9,6 +9,7 @@ import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.Toast
 import br.com.franzim.financaskotlin.R
+import br.com.franzim.financaskotlin.dao.TransacaoDao
 import br.com.franzim.financaskotlin.model.Transacao
 import br.com.franzim.financaskotlin.model.enums.Tipo
 import br.com.franzim.financaskotlin.ui.ResumoView
@@ -19,12 +20,14 @@ import kotlinx.android.synthetic.main.activity_lista_transacoes.*
 
 class ListaTransacoesActivity : AppCompatActivity() {
 
-    private var transacoes: MutableList<Transacao> = mutableListOf();
+//    private var transacoes: MutableList<Transacao> = mutableListOf()
+    private val dao = TransacaoDao()
+    private val transacoes = dao.transacoes
 
     //    private lateinit var viewGroup: ViewGroup
-        private val viewGroup by lazy {
-            window.decorView
-        }
+    private val viewGroup by lazy {
+        window.decorView
+    }
 
 //    private val viewGroup: View
 //        get() {
@@ -68,7 +71,8 @@ class ListaTransacoesActivity : AppCompatActivity() {
 
 
     private fun addTransacao(transacao: Transacao) {
-        transacoes.add(transacao)
+//        transacoes.add(transacao)
+        dao.add(transacao)
         lista_transacoes_adiciona_menu.close(true)
         atualizaTotais()
     }
@@ -106,7 +110,8 @@ class ListaTransacoesActivity : AppCompatActivity() {
     }
 
     fun remove(position: Int) {
-        transacoes.removeAt(position)
+//        transacoes.removeAt(position)
+        dao.remove(position)
         atualizaTotais()
     }
 
@@ -119,7 +124,8 @@ class ListaTransacoesActivity : AppCompatActivity() {
     }
 
     private fun alteraTransacao(posicao: Int, transacao: Transacao) {
-        transacoes[posicao] = transacao
+//        transacoes[posicao] = transacao
+        dao.update(transacao, posicao)
         lista_transacoes_adiciona_menu.close(true)
         atualizaTotais()
     }
